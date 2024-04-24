@@ -22,4 +22,12 @@ class AudioPlayer(
         player?.release()
         player = null
     }
+
+    fun watch(
+        onComplete: () -> Unit
+    ) {
+        player?.setOnCompletionListener {
+            onComplete()
+        }
+    }
 }

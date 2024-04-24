@@ -71,6 +71,11 @@ class MainActivity : ComponentActivity() {
                     }
             }
 
+            LaunchedEffect(key1 = selectedFileName.value) {
+                audioPlayer.stop()
+                isPlaying.value = false
+            }
+
             JetpackAudioRecorderTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
@@ -152,6 +157,11 @@ class MainActivity : ComponentActivity() {
                                     else -> {
                                         selectedFileName.value?.let {
                                             audioPlayer.playFile(it)
+                                            audioPlayer.watch(
+                                                onComplete = {
+                                                    isPlaying.value = false
+                                                }
+                                            )
                                         }
                                     }
                                 }
@@ -171,19 +181,5 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-    }
-
-    fun getAvailableFileName(firstName: String): String {
-        val count = dataDir
-            ?.listFiles { dir, name -> name.startsWith(firstName) }
-            ?.size ?: 0
-        return "$firstName-$count.mp3"
-    }
-
-    fun getLastRecorded(firstName: String): String {
-        val count = dataDir
-            ?.listFiles { dir, name -> name.startsWith(firstName) }
-            ?.size ?: 0
-        return dataDir?.absolutePath + File.separator + "$firstName-${count - 1}.mp3"
     }
 }
